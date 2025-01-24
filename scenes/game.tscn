@@ -76,3 +76,7 @@ light_energy = 1.5
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_8rasn")
+
+[connection signal="input_event" from="Player" to="Player" method="_on_input_event"]
+[connection signal="mouse_entered" from="Player" to="Player" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Player" to="Player" method="_on_mouse_exited"]
