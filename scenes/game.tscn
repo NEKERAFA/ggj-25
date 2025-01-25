@@ -70,6 +70,10 @@ skeleton = NodePath("../..")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
 shape = SubResource("CapsuleShape3D_irlrm")
 
+[node name="CoyoteTimer" type="Timer" parent="Player"]
+wait_time = 0.1
+one_shot = true
+
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.5, 0.866025, 0, -0.866025, 0.5, 0, 0, 0)
 light_energy = 1.5
@@ -80,3 +84,4 @@ environment = SubResource("Environment_8rasn")
 [connection signal="input_event" from="Player" to="Player" method="_on_input_event"]
 [connection signal="mouse_entered" from="Player" to="Player" method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="Player" to="Player" method="_on_mouse_exited"]
+[connection signal="timeout" from="Player/CoyoteTimer" to="Player" method="_on_coyote_timeout"]
