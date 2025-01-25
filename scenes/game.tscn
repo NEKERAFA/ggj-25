@@ -1,6 +1,8 @@
-[gd_scene load_steps=9 format=3 uid="uid://cgcawoq8l0nsc"]
+[gd_scene load_steps=16 format=3 uid="uid://cgcawoq8l0nsc"]
 
-[ext_resource type="Script" path="res://scenes/player.gd" id="1_i5taf"]
+[ext_resource type="Script" path="res://scripts/player.gd" id="1_i5taf"]
+[ext_resource type="Script" path="res://scripts/word.gd" id="2_dfyvr"]
+[ext_resource type="Script" path="res://scenes/area_3d.gd" id="3_31o80"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_wem7x"]
 size = Vector3(4, 2, 1)
@@ -28,6 +30,24 @@ sky = SubResource("Sky_6dnlu")
 ambient_light_source = 3
 reflected_light_source = 2
 tonemap_mode = 2
+
+[sub_resource type="BoxMesh" id="BoxMesh_gbjh3"]
+size = Vector3(0.5, 0.5, 0.25)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_m2cmf"]
+size = Vector3(0.5, 0.5, 0.25)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_upjmi"]
+size = Vector3(15, 7, 1)
+
+[sub_resource type="Gradient" id="Gradient_yd8sm"]
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(1, 1, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_r2maj"]
+gradient = SubResource("Gradient_yd8sm")
+width = 1980
+height = 1080
 
 [node name="Game" type="Node"]
 
@@ -81,7 +101,34 @@ light_energy = 1.5
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_8rasn")
 
+[node name="Word" type="AnimatableBody3D" parent="." node_paths=PackedStringArray("mouse_area")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.37156, 2.55156, 0)
+script = ExtResource("2_dfyvr")
+mouse_area = NodePath("../Area3D")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Word"]
+mesh = SubResource("BoxMesh_gbjh3")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Word"]
+shape = SubResource("BoxShape3D_m2cmf")
+
+[node name="Area3D" type="Area3D" parent="."]
+monitoring = false
+monitorable = false
+script = ExtResource("3_31o80")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.5)
+shape = SubResource("BoxShape3D_upjmi")
+disabled = true
+
+[node name="Sprite3D" type="Sprite3D" parent="Area3D"]
+visible = false
+modulate = Color(0, 1, 1, 0.235294)
+texture = SubResource("GradientTexture2D_r2maj")
+
 [connection signal="input_event" from="Player" to="Player" method="_on_input_event"]
 [connection signal="mouse_entered" from="Player" to="Player" method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="Player" to="Player" method="_on_mouse_exited"]
 [connection signal="timeout" from="Player/CoyoteTimer" to="Player" method="_on_coyote_timeout"]
+[connection signal="input_event" from="Word" to="Word" method="_on_input_event"]

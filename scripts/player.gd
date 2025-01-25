@@ -14,7 +14,8 @@ var _jumping: bool = false
 var _is_coyote: bool = false
 var _is_coyote_finished: bool = true
 
-func _input(event):
+
+func _input(event: InputEvent) -> void:
 	# Handle jump.
 	if event is InputEventMouseButton:
 		var mouse_event = event as InputEventMouseButton
@@ -64,13 +65,13 @@ func _on_input_event(camera: Node, event: InputEvent, event_position: Vector3, n
 			velocity.x = SPEED
 
 
-func _on_mouse_exited():
+func _on_mouse_exited() -> void:
 	_mouse_entering = false
 
 
-func _on_mouse_entered():
+func _on_mouse_entered() -> void:
 	_mouse_entering = true
 
 
-func _on_coyote_timeout():
+func _on_coyote_timeout() -> void:
 	_is_coyote_finished = true
