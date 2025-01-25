@@ -1,22 +1,15 @@
-[gd_scene load_steps=17 format=3 uid="uid://cgcawoq8l0nsc"]
+[gd_scene load_steps=16 format=3 uid="uid://cgcawoq8l0nsc"]
 
-[ext_resource type="Script" path="res://scripts/player.gd" id="1_i5taf"]
-[ext_resource type="Script" path="res://scripts/word.gd" id="2_dfyvr"]
-[ext_resource type="Script" path="res://scripts/area_3d.gd" id="3_31o80"]
+[ext_resource type="PackedScene" uid="uid://d4dylxevxt66t" path="res://entities/player.tscn" id="1_ls4w4"]
+[ext_resource type="PackedScene" uid="uid://c2503n8m4ambq" path="res://entities/word.tscn" id="2_dqglf"]
+[ext_resource type="Script" path="res://scripts/mouse_grab_area_3d.gd" id="3_ueax6"]
+[ext_resource type="Script" path="res://scripts/mouse_2d.gd" id="4_bpw31"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_wem7x"]
 size = Vector3(4, 2, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_sjqlb"]
 size = Vector3(4, 2, 1)
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_2cdui"]
-radius = 0.2
-height = 1.0
-
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_irlrm"]
-radius = 0.2
-height = 1.0
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_bvd2h"]
 
@@ -31,14 +24,9 @@ ambient_light_source = 3
 reflected_light_source = 2
 tonemap_mode = 2
 
-[sub_resource type="BoxMesh" id="BoxMesh_gbjh3"]
-size = Vector3(1, 0.5, 0.25)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_m2cmf"]
-size = Vector3(1, 0.5, 0.25)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_upjmi"]
-size = Vector3(15, 7, 1)
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_raigs"]
+margin = 0.02
+plane = Plane(0, 0, 1, 0)
 
 [sub_resource type="Gradient" id="Gradient_yd8sm"]
 offsets = PackedFloat32Array(0)
@@ -55,10 +43,14 @@ height = 0.1
 radial_segments = 16
 rings = 8
 
-[node name="Game" type="Node"]
+[sub_resource type="Gradient" id="Gradient_ns7ls"]
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(100, 100, 100, 1)
 
-[node name="Camera" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5)
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_185d1"]
+gradient = SubResource("Gradient_ns7ls")
+
+[node name="Game" type="Node"]
 
 [node name="Platform 1" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, -3, 0)
@@ -80,25 +72,7 @@ skeleton = NodePath("../..")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Platform 2"]
 shape = SubResource("BoxShape3D_sjqlb")
 
-[node name="Player" type="CharacterBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, -1.5, 0)
-axis_lock_linear_z = true
-axis_lock_angular_x = true
-axis_lock_angular_y = true
-axis_lock_angular_z = true
-script = ExtResource("1_i5taf")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Player"]
-transform = Transform3D(0.999984, 0.00568974, 0, -0.00568974, 0.999984, 0, 0, 0, 1, 0, 0, 0)
-mesh = SubResource("CapsuleMesh_2cdui")
-skeleton = NodePath("../..")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
-shape = SubResource("CapsuleShape3D_irlrm")
-
-[node name="CoyoteTimer" type="Timer" parent="Player"]
-wait_time = 0.1
-one_shot = true
+[node name="Player" parent="." instance=ExtResource("1_ls4w4")]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.5, 0.866025, 0, -0.866025, 0.5, 0, 0, 0)
@@ -107,28 +81,17 @@ light_energy = 1.5
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_8rasn")
 
-[node name="Word" type="AnimatableBody3D" parent="." node_paths=PackedStringArray("mouse_area", "snap_points")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.37156, 2.55156, 0)
-sync_to_physics = false
-script = ExtResource("2_dfyvr")
+[node name="Word" parent="." node_paths=PackedStringArray("mouse_area", "snap_points") instance=ExtResource("2_dqglf")]
 mouse_area = NodePath("../GrabArea")
 snap_points = NodePath("../SnapPoints")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Word"]
-mesh = SubResource("BoxMesh_gbjh3")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Word"]
-shape = SubResource("BoxShape3D_m2cmf")
 
 [node name="GrabArea" type="Area3D" parent="."]
 monitoring = false
 monitorable = false
-script = ExtResource("3_31o80")
+script = ExtResource("3_ueax6")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="GrabArea"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.5)
-shape = SubResource("BoxShape3D_upjmi")
-disabled = true
+shape = SubResource("WorldBoundaryShape3D_raigs")
 
 [node name="Sprite3D" type="Sprite3D" parent="GrabArea"]
 visible = false
@@ -221,8 +184,22 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, -2, 0)
 [node name="MeshInstance3D" type="MeshInstance3D" parent="SnapPoints/Marker3D14"]
 mesh = SubResource("SphereMesh_7vkr0")
 
-[connection signal="input_event" from="Player" to="Player" method="_on_input_event"]
-[connection signal="mouse_entered" from="Player" to="Player" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Player" to="Player" method="_on_mouse_exited"]
-[connection signal="timeout" from="Player/CoyoteTimer" to="Player" method="_on_coyote_timeout"]
-[connection signal="input_event" from="Word" to="Word" method="_on_input_event"]
+[node name="Camera" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5)
+cull_mask = 1
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(960, 540)
+
+[node name="Sprite2D" type="Sprite2D" parent="SubViewportContainer/SubViewport"]
+texture = SubResource("GradientTexture2D_185d1")
+script = ExtResource("4_bpw31")

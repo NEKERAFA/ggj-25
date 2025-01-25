@@ -1,15 +1,19 @@
 [gd_scene load_steps=4 format=3 uid="uid://c2503n8m4ambq"]
 
-[ext_resource type="Script" path="res://scripts/word.gd" id="1_xy41a"]
+[ext_resource type="Script" path="res://scripts/word.gd" id="1_kyklp"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_gbjh3"]
-size = Vector3(0.5, 0.5, 0.25)
+size = Vector3(1, 0.5, 0.25)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_m2cmf"]
-size = Vector3(0.5, 0.5, 0.25)
+size = Vector3(1, 0.5, 0.25)
 
-[node name="Word" type="AnimatableBody3D"]
-script = ExtResource("1_xy41a")
+[node name="Word" type="AnimatableBody3D" node_paths=PackedStringArray("mouse_area", "snap_points")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.37156, 2.55156, 0)
+sync_to_physics = false
+script = ExtResource("1_kyklp")
+mouse_area = NodePath("")
+snap_points = NodePath("")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("BoxMesh_gbjh3")

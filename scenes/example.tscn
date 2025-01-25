@@ -1,0 +1,108 @@
+[gd_scene load_steps=10 format=3 uid="uid://188pn2056xl6"]
+
+[sub_resource type="GDScript" id="GDScript_o88qn"]
+script/source = "extends Node
+
+@onready var sub_viewport: SubViewport = $SubViewport
+@onready var camera_2d: Camera2D = $SubViewport/Camera2D
+@onready var mesh_instance_3d: MeshInstance3D = $Area3D/MeshInstance3D
+@onready var quad_mesh_size = (mesh_instance_3d.mesh as QuadMesh).size
+
+
+func _process(delta: float) -> void:
+	if Input.is_action_just_pressed(\"ui_page_down\"):
+		camera_2d.zoom += Vector2(0.2, 0.2)
+	if Input.is_action_just_pressed(\"ui_page_up\"):
+		camera_2d.zoom -= Vector2(0.2, 0.2)
+
+
+func _on_area_3d_input_event(camera: Node, event: InputEvent, position: Vector3, normal: Vector3, shape_idx: int) -> void:
+	if event is InputEventMouse:
+		# position is local, convert it to global
+		position = mesh_instance_3d.global_transform.affine_inverse() * position
+		# remap the position from the mesh size coordinates to the sub viewport coordinates
+		var mouse_position = Vector2(position.x, -position.y)
+		mouse_position.x = remap(mouse_position.x, -quad_mesh_size.x/2, quad_mesh_size.x/2, 0, sub_viewport.size.x)
+		mouse_position.y = remap(mouse_position.y, -quad_mesh_size.y/2, quad_mesh_size.y/2, 0, sub_viewport.size.y)
+		# overwrite the event position and global_position with the computed new mouse position
+		event.position = mouse_position
+		event.global_position = mouse_position
+
+	# push the event to the sub viewport
+	sub_viewport.push_input(event, true)
+"
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_wkps1"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_qm1xd"]
+sky_material = SubResource("ProceduralSkyMaterial_wkps1")
+
+[sub_resource type="Environment" id="Environment_kyew5"]
+background_mode = 2
+sky = SubResource("Sky_qm1xd")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="GDScript" id="GDScript_2p2pu"]
+script/source = "extends Node2D
+
+
+func _draw() -> void:
+	draw_rect(Rect2(-64, -64, 128, 128), Color.RED)
+
+
+func _process(delta: float) -> void:
+	global_position = get_global_mouse_position()
+"
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_x8h5p"]
+points = PackedVector3Array(1, 1, 0, 1, -1, 0, -1, 1, 0, -1, -1, 0)
+
+[sub_resource type="QuadMesh" id="QuadMesh_e0e3g"]
+size = Vector2(2, 2)
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_hdng0"]
+viewport_path = NodePath("SubViewport")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8r3gc"]
+resource_local_to_scene = true
+shading_mode = 0
+albedo_texture = SubResource("ViewportTexture_hdng0")
+
+[node name="Test3DSubviewportInputZoom" type="Node"]
+script = SubResource("GDScript_o88qn")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_kyew5")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+shadow_enabled = true
+
+[node name="SubViewport" type="SubViewport" parent="."]
+disable_3d = true
+handle_input_locally = false
+size_2d_override = Vector2i(512, 512)
+
+[node name="Node2D" type="Node2D" parent="SubViewport"]
+script = SubResource("GDScript_2p2pu")
+
+[node name="Camera2D" type="Camera2D" parent="SubViewport"]
+
+[node name="Area3D" type="Area3D" parent="."]
+transform = Transform3D(0.930328, -0.313371, 0.190495, 0, 0.519445, 0.854504, -0.366729, -0.794969, 0.483254, 0.567808, 0.0171332, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+shape = SubResource("ConvexPolygonShape3D_x8h5p")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Area3D"]
+mesh = SubResource("QuadMesh_e0e3g")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_8r3gc")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.979537, -0.0858538, 0.182036, -0.0782722, 0.670759, 0.737533, -0.185423, -0.736689, 0.650313, 1.16925, 1.50152, 1.28899)
+
+[connection signal="input_event" from="Area3D" to="." method="_on_area_3d_input_event"]
