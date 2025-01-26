@@ -7,7 +7,7 @@
 size = Vector3(1, 4.4707, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_w2f2k"]
-size = Vector3(1.36157, 0.997388, 1)
+size = Vector3(0.999329, 0.806311, 1)
 
 [node name="Tenedor" type="StaticBody3D"]
 script = ExtResource("1_7mqhx")
@@ -23,7 +23,7 @@ shape = SubResource("BoxShape3D_eek5q")
 [node name="Area3D" type="Area3D" parent="."]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0149072, 2.10131, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.000106215, 2.00577, 0)
 shape = SubResource("BoxShape3D_w2f2k")
 
 [connection signal="body_entered" from="Area3D" to="." method="_on_body_entered"]

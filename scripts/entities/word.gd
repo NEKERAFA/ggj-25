@@ -2,6 +2,9 @@ extends AnimatableBody3D
 class_name Word
 
 
+signal snapped
+
+
 const GRABBED_WAIT = 0.2
 
 
@@ -102,6 +105,7 @@ func _snap_to_nearest():
 	
 	if nearest:
 		global_position = nearest
+		snapped.emit()
 
 
 func start_snap():

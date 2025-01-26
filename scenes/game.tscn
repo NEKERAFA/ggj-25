@@ -1,9 +1,10 @@
-[gd_scene load_steps=44 format=4 uid="uid://ds1m3kjeef23a"]
+[gd_scene load_steps=49 format=4 uid="uid://ds1m3kjeef23a"]
 
 [ext_resource type="Texture2D" uid="uid://cmmxuyl54db6y" path="res://textures/background.png" id="1_7hnnr"]
 [ext_resource type="PackedScene" uid="uid://dwe2rcpwj2vr5" path="res://entities/words/Title/PLAY.tscn" id="1_g3a06"]
 [ext_resource type="PackedScene" uid="uid://d4dylxevxt66t" path="res://entities/player.tscn" id="1_wmdvm"]
 [ext_resource type="PackedScene" uid="uid://d182470e52bof" path="res://entities/characters/paula.tscn" id="2_dfebj"]
+[ext_resource type="Script" path="res://scripts/entities/play.gd" id="2_pkhnp"]
 [ext_resource type="PackedScene" uid="uid://0ysm1vddo1a8" path="res://entities/characters/lila.tscn" id="3_20hqq"]
 [ext_resource type="PackedScene" uid="uid://b0w0rb26h4f5m" path="res://models/title/playHueco.fbx" id="3_ylje0"]
 [ext_resource type="PackedScene" uid="uid://d1mqkqrta7sky" path="res://entities/elements/platillo.tscn" id="6_lmdao"]
@@ -28,6 +29,7 @@
 [ext_resource type="PackedScene" uid="uid://1gvdhtrrveqt" path="res://entities/words/Dialogue1/2/to.tscn" id="22_gpdn0"]
 [ext_resource type="PackedScene" uid="uid://bqjjvqkqojfdl" path="res://entities/words/Dialogue1/3/he.tscn" id="23_7ssg3"]
 [ext_resource type="PackedScene" uid="uid://ch4i6oecji202" path="res://entities/words/Dialogue1/3/remembered.tscn" id="24_nkhgb"]
+[ext_resource type="PackedScene" uid="uid://c7mimwp0d6r8j" path="res://entities/elements/signal.tscn" id="27_835o4"]
 [ext_resource type="PackedScene" uid="uid://bwt0vpf20iyd2" path="res://entities/mouse.tscn" id="27_dk1to"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0jidq"]
@@ -150,6 +152,42 @@ gradient = SubResource("Gradient_yd8sm")
 width = 1980
 height = 1080
 
+[sub_resource type="Animation" id="Animation_wf05h"]
+resource_name = "to_level_1"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Camera:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 12, 10), Vector3(0, 0, 10)]
+}
+
+[sub_resource type="Animation" id="Animation_gddmm"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Camera:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 12, 10)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_djciw"]
+_data = {
+"RESET": SubResource("Animation_gddmm"),
+"to_level_1": SubResource("Animation_wf05h")
+}
+
 [node name="Game" type="Node"]
 
 [node name="Title" type="Node" parent="."]
@@ -166,8 +204,10 @@ mesh = SubResource("ArrayMesh_rpw1x")
 skeleton = NodePath("")
 surface_material_override/0 = SubResource("StandardMaterial3D_ijtdu")
 
-[node name="Play" parent="Title/Title" node_paths=PackedStringArray("mouse_area", "snap_points") instance=ExtResource("1_g3a06")]
+[node name="Play" parent="Title/Title" node_paths=PackedStringArray("anim_player", "mouse_area", "snap_points") instance=ExtResource("1_g3a06")]
 transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -1.2, 0.4, 0)
+script = ExtResource("2_pkhnp")
+anim_player = NodePath("../../../AnimationPlayer")
 mouse_area = NodePath("../../../Camera/GrabArea")
 snap_points = NodePath("../../snaps")
 rotable = false
@@ -185,7 +225,7 @@ transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0.36, 0)
 [node name="Level 1" type="Node" parent="."]
 
 [node name="Platform 1" type="StaticBody3D" parent="Level 1"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.4, -4.25, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.8, -4.25, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Level 1/Platform 1"]
 mesh = SubResource("BoxMesh_o8ghy")
@@ -195,7 +235,7 @@ skeleton = NodePath("../../..")
 shape = SubResource("BoxShape3D_vd0u1")
 
 [node name="Platform 2" type="StaticBody3D" parent="Level 1"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.4, -4.25, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.8, -4.25, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Level 1/Platform 2"]
 mesh = SubResource("BoxMesh_o8ghy")
@@ -204,28 +244,29 @@ skeleton = NodePath("../../..")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Level 1/Platform 2"]
 shape = SubResource("BoxShape3D_vd0u1")
 
-[node name="Player" parent="Level 1" instance=ExtResource("1_wmdvm")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, -3.25, 0)
+[node name="Player" parent="Level 1" node_paths=PackedStringArray("spawn_signal") instance=ExtResource("1_wmdvm")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.63675, -3.25, 0)
+spawn_signal = NodePath("../SpawnSignal")
 
 [node name="Paula" parent="Level 1" instance=ExtResource("2_dfebj")]
-transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, -6.5, -4, -2)
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, -7.95038, -4, -2)
 
 [node name="Lila" parent="Level 1" instance=ExtResource("3_20hqq")]
-transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 6.5, -4, -2)
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 8.09188, -4, -2)
 
 [node name="Elements" type="Node3D" parent="Level 1"]
 
 [node name="Platillo" parent="Level 1/Elements" instance=ExtResource("6_lmdao")]
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0.0583172, -2.58543, 0)
+transform = Transform3D(0.5, -0.000200713, 0, 0.000200713, 0.5, 0, 0, 0, 0.5, 0.341316, -3.11606, 0)
 
 [node name="Cuchillito" parent="Level 1/Elements" instance=ExtResource("7_cl3nd")]
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -3.0131, -3.82955, 0)
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -4.18048, -4.25405, 0)
 
 [node name="Tenedor" parent="Level 1/Elements" instance=ExtResource("8_b8jmh")]
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -1.38019, -3.67404, 0)
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -1.2387, -4.20466, 0)
 
 [node name="Tenedor2" parent="Level 1/Elements" instance=ExtResource("8_b8jmh")]
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 2.13833, -3.67404, 0)
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 2.13833, -4.1017, 0)
 
 [node name="BubbleLeft" type="AnimatedSprite3D" parent="Level 1"]
 transform = Transform3D(1.75, 0, 0, 0, 1, 0, 0, 0, 1, -1.2065, 2.93606, -3)
@@ -272,29 +313,65 @@ text = "was very hungry."
 
 [node name="Words" type="Node3D" parent="Level 1"]
 
-[node name="Give" parent="Level 1/Words" node_paths=PackedStringArray("mouse_area") instance=ExtResource("19_snau5")]
+[node name="Give" parent="Level 1/Words" node_paths=PackedStringArray("mouse_area", "snap_points") instance=ExtResource("19_snau5")]
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, -1.55705, 3.1469, -1)
 mouse_area = NodePath("../../../Camera/GrabArea")
+snap_points = NodePath("../../Snap Points")
+min_snap = -2.0
 
-[node name="Something" parent="Level 1/Words" node_paths=PackedStringArray("mouse_area") instance=ExtResource("20_xksrv")]
+[node name="Something" parent="Level 1/Words" node_paths=PackedStringArray("mouse_area", "snap_points") instance=ExtResource("20_xksrv")]
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 0.365462, 3.138, -1)
 mouse_area = NodePath("../../../Camera/GrabArea")
+snap_points = NodePath("../../Snap Points")
+min_snap = -2.0
 
-[node name="To" parent="Level 1/Words" node_paths=PackedStringArray("mouse_area") instance=ExtResource("21_3xyoy")]
+[node name="To" parent="Level 1/Words" node_paths=PackedStringArray("mouse_area", "snap_points") instance=ExtResource("21_3xyoy")]
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 2.1078, 3.13944, -1)
 mouse_area = NodePath("../../../Camera/GrabArea")
+snap_points = NodePath("../../Snap Points")
+min_snap = -2.0
 
-[node name="To2" parent="Level 1/Words" node_paths=PackedStringArray("mouse_area") instance=ExtResource("22_gpdn0")]
+[node name="To2" parent="Level 1/Words" node_paths=PackedStringArray("mouse_area", "snap_points") instance=ExtResource("22_gpdn0")]
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, -1.245, 2.54711, -1)
 mouse_area = NodePath("../../../Camera/GrabArea")
+snap_points = NodePath("../../Snap Points")
+min_snap = -2.0
 
-[node name="He" parent="Level 1/Words" node_paths=PackedStringArray("mouse_area") instance=ExtResource("23_7ssg3")]
+[node name="He" parent="Level 1/Words" node_paths=PackedStringArray("mouse_area", "snap_points") instance=ExtResource("23_7ssg3")]
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 0.65053, -0.353687, -1)
 mouse_area = NodePath("../../../Camera/GrabArea")
+snap_points = NodePath("../../Snap Points")
+min_snap = -2.0
 
-[node name="Remembered" parent="Level 1/Words" node_paths=PackedStringArray("mouse_area") instance=ExtResource("24_nkhgb")]
+[node name="Remembered" parent="Level 1/Words" node_paths=PackedStringArray("mouse_area", "snap_points") instance=ExtResource("24_nkhgb")]
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 2.79769, 0.226089, -1)
 mouse_area = NodePath("../../../Camera/GrabArea")
+snap_points = NodePath("../../Snap Points")
+min_snap = -2.0
+
+[node name="Snap Points" type="Node3D" parent="Level 1"]
+
+[node name="Marker3D" type="Marker3D" parent="Level 1/Snap Points"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.15854, -3.45236, 0)
+
+[node name="Marker3D2" type="Marker3D" parent="Level 1/Snap Points"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.22399, -2.77653, 0)
+
+[node name="Marker3D3" type="Marker3D" parent="Level 1/Snap Points"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.65223, -3.40526, 0)
+
+[node name="Marker3D4" type="Marker3D" parent="Level 1/Snap Points"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.26627, -2.85429, 0)
+
+[node name="Marker3D5" type="Marker3D" parent="Level 1/Snap Points"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.8351, -2.89249, 0)
+
+[node name="Marker3D6" type="Marker3D" parent="Level 1/Snap Points"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.10984, -2.6981, 0)
+
+[node name="SpawnSignal" parent="Level 1" node_paths=PackedStringArray("player") instance=ExtResource("27_835o4")]
+transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, -6.692, -3.31977, -0.5)
+player = NodePath("../Player")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.5, 0.866025, 0, -0.866025, 0.5, 0, 0, 0)
@@ -306,7 +383,7 @@ shadow_enabled = true
 environment = SubResource("Environment_ko4gn")
 
 [node name="Camera" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 12, 10)
 cull_mask = 1
 fov = 45.0
 
@@ -343,3 +420,10 @@ size = Vector2i(960, 540)
 render_target_update_mode = 4
 
 [node name="Mouse" parent="MouseViewportContainer/SubViewport" instance=ExtResource("27_dk1to")]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_djciw")
+}
+
+[connection signal="snapped" from="Title/Title/Play" to="Title/Title/Play" method="_on_snapped"]

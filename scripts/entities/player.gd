@@ -3,10 +3,11 @@ class_name Player
 
 
 const SPEED := 2.0
-const JUMP_VELOCITY := 2.5
+const JUMP_VELOCITY := 4.5
 
 
 @export var start_movement: bool = false
+@export var spawn_signal: SpawnSignal = null
 
 
 @onready var _coyote_timer = $CoyoteTimer
@@ -63,6 +64,12 @@ func _physics_process(delta: float) -> void:
 			_is_coyote = false
 			_is_coyote_finished = true
 			$CoyoteTimer.stop()
+		
+		if (
+			not _jumping and velocity.x > 0
+			and _model.current_anim != GeroController.GeroAnimation.WALK
+		):
+			_model.current_anim = GeroController.GeroAnimation.WALK
 
 	move_and_slide()
 	
@@ -78,6 +85,7 @@ func _on_input_event(camera: Node, event: InputEvent, event_position: Vector3, n
 		if mouse_event.button_index == MOUSE_BUTTON_LEFT and mouse_event.pressed:
 			velocity.x = SPEED
 			_model.current_anim = GeroController.GeroAnimation.WALK
+			spawn_signal.enable_spawn()
 
 
 func _on_mouse_exited() -> void:
@@ -110,8 +118,10 @@ func _on_restart_timeout() -> void:
 
 
 func _restart_state() -> void:
+	velocity.x = 0
 	velocity.y = 0
 	_model.current_anim = GeroController.GeroAnimation.IDLE
 	collision_layer = 1
 	collision_mask = 1
 	position = _initial_position
+	spawn_signal.disable_spawn()

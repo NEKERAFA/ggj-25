@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://dj6muheg4ajvo"
-path="res://.godot/imported/anim_pr_senalReplaySpawn_v01.blend-5cf683bff137f7936a0ed7b5b857933d.scn"
+uid="uid://5tdhii0sspep"
+path="res://.godot/imported/anim_pr_senalReplayDespawn_v01.blend-de3a191345f20843f92518e787b1f11b.scn"
 
 [deps]
 
-source_file="res://models/signal/anim_pr_senalReplaySpawn_v01.blend"
-dest_files=["res://.godot/imported/anim_pr_senalReplaySpawn_v01.blend-5cf683bff137f7936a0ed7b5b857933d.scn"]
+source_file="res://models/respawn/anim_pr_senalReplayDespawn_v01.blend"
+dest_files=["res://.godot/imported/anim_pr_senalReplayDespawn_v01.blend-de3a191345f20843f92518e787b1f11b.scn"]
 
 [params]
 
