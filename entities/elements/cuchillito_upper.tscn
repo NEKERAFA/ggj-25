@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://citarknm4tvw1"]
+
+[ext_resource type="Script" path="res://scripts/entities/cuchillito.gd" id="1_v0qif"]
+[ext_resource type="Texture2D" uid="uid://dlo70cilneqkx" path="res://textures/cuchillito.png" id="2_hqgkx"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_eek5q"]
+size = Vector3(1, 5.18936, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_w2f2k"]
+size = Vector3(1.38062, 0.849463, 1)
+
+[node name="Cuchillito" type="StaticBody3D"]
+script = ExtResource("1_v0qif")
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+texture = ExtResource("2_hqgkx")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.305322, 0)
+shape = SubResource("BoxShape3D_eek5q")
+
+[node name="Area3D" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0297388, 2.54763, 0)
+shape = SubResource("BoxShape3D_w2f2k")
+
+[connection signal="body_entered" from="Area3D" to="." method="_on_body_entered"]

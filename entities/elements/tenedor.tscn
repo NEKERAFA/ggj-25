@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=3 uid="uid://b2g080otfnsvx"]
+
+[ext_resource type="Script" path="res://scripts/entities/cuchillito.gd" id="1_7mqhx"]
+[ext_resource type="Texture2D" uid="uid://5fvbckg1768k" path="res://textures/tenedor.png" id="2_7y0la"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_eek5q"]
+size = Vector3(1, 4.4707, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_w2f2k"]
+size = Vector3(1.36157, 0.997388, 1)
+
+[node name="Tenedor" type="StaticBody3D"]
+script = ExtResource("1_7mqhx")
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+texture = ExtResource("2_7y0la")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.466242, 0)
+shape = SubResource("BoxShape3D_eek5q")
+
+[node name="Area3D" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0149072, 2.10131, 0)
+shape = SubResource("BoxShape3D_w2f2k")
+
+[connection signal="body_entered" from="Area3D" to="." method="_on_body_entered"]

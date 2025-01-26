@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://d4dylxevxt66t" path="res://entities/player.tscn" id="1_ls4w4"]
 [ext_resource type="PackedScene" uid="uid://c2503n8m4ambq" path="res://entities/word.tscn" id="2_dqglf"]
 [ext_resource type="Script" path="res://scripts/mouse_grab_area_3d.gd" id="3_ueax6"]
-[ext_resource type="Script" path="res://scripts/mouse_2d.gd" id="4_bpw31"]
+[ext_resource type="Script" path="res://scripts/entities/mouse_2d.gd" id="4_bpw31"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_wem7x"]
 size = Vector3(4, 2, 1)
@@ -13,13 +13,13 @@ size = Vector3(4, 2, 1)
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_bvd2h"]
 
-[sub_resource type="Sky" id="Sky_6dnlu"]
+[sub_resource type="Sky" id="Sky_7eyqs"]
 sky_material = SubResource("ProceduralSkyMaterial_bvd2h")
 radiance_size = 2
 
 [sub_resource type="Environment" id="Environment_8rasn"]
 background_mode = 2
-sky = SubResource("Sky_6dnlu")
+sky = SubResource("Sky_7eyqs")
 ambient_light_source = 3
 reflected_light_source = 2
 tonemap_mode = 2
@@ -43,12 +43,12 @@ height = 0.1
 radial_segments = 16
 rings = 8
 
-[sub_resource type="Gradient" id="Gradient_ns7ls"]
+[sub_resource type="Gradient" id="Gradient_fatv2"]
 offsets = PackedFloat32Array(0)
 colors = PackedColorArray(100, 100, 100, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_185d1"]
-gradient = SubResource("Gradient_ns7ls")
+gradient = SubResource("Gradient_fatv2")
 width = 32
 height = 32
 

@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://d1mqkqrta7sky"]
+
+[ext_resource type="Texture2D" uid="uid://dxysd5urvluh7" path="res://textures/platillo.png" id="1_x44hc"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_eek5q"]
+size = Vector3(5.35327, 0.86499, 1)
+
+[node name="Platillo" type="StaticBody3D"]
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.260057, 0)
+texture = ExtResource("1_x44hc")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.463033, 0)
+shape = SubResource("BoxShape3D_eek5q")

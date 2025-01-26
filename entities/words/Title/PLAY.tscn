@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://dwe2rcpwj2vr5"]
+
+[ext_resource type="Script" path="res://scripts/entities/word.gd" id="1_2s4ow"]
+[ext_resource type="PackedScene" uid="uid://c1u8jvaokbvbm" path="res://models/title/PLAY.fbx" id="2_ucguq"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_m2cmf"]
+size = Vector3(1.2, 0.5, 0.25)
+
+[node name="Play" type="AnimatableBody3D"]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
+script = ExtResource("1_2s4ow")
+
+[node name="Mesh" parent="." instance=ExtResource("2_ucguq")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -0.02, 0.11, -0.07)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_m2cmf")
+
+[connection signal="input_event" from="." to="." method="_on_input_event"]
