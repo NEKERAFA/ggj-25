@@ -12,6 +12,7 @@ func _on_input_event(camera: Node, event: InputEvent, event_position: Vector3, n
 			player._restart_state()
 			disable_spawn()
 
+
 func enable_spawn():
 	$CollisionShape3D.disabled = false
 	$anim_pr_senalReplayDespawn_v01.hide()

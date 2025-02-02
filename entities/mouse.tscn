@@ -196,11 +196,11 @@ script = ExtResource("1_2og3k")
 scale = Vector2(0.25, 0.25)
 sprite_frames = SubResource("SpriteFrames_vpqkt")
 animation = &"click"
-frame = 5
-frame_progress = 1.0
 
 [node name="cursor" type="Marker2D" parent="."]
 position = Vector2(6, -11)
 
 [node name="grab" type="Marker2D" parent="."]
 position = Vector2(5, 3)
+
+[connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animation_finished"]

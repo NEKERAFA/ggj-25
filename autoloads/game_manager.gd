@@ -1,8 +1,11 @@
 extends Node
 
 
-func can_player_walk() -> bool:
-	return false
+signal word_hovered
+signal word_unhovered
+signal word_started_grab
+signal word_released_grab
+
 
 
 func _notification(what: int) -> void:
